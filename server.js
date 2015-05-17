@@ -3,17 +3,26 @@ var express = require("express"),
     server = require('http').createServer(app),
     io = require("socket.io").listen(server),
     bodyParser = require('body-parser'),
-    port = process.env.PORT || 3000,
-    mongoose = require("mongoose");
+    port = pprocess.env.OPENSHIFT_NODEJS_PORT || 3000,
+    mongoose = require("mongoose"),
+    server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 
 var stocks = [];
-
+var mongodb_connection_string;
 
 require("./models/stockRT");
 var stockRT = mongoose.model('stock');
 
 
-mongoose.connect('mongodb://localhost/stockRT',function(err){
+
+//provide a sensible default for local development
+mongodb_connection_string = 'mongodb://localhost/stockRT';
+//take advantage of openshift env vars when available:
+if(process.env.OPENSHIFT_MONGODB_DB_URL){
+  mongodb_connection_string = process.env.OPENSHIFT_MONGODB_DB_URL + stockRT;
+}
+
+mongoose.connect(mongodb_connection_string,function(err){
   if(err) return console.log(err);
   console.log("connected to db");
 })
@@ -81,6 +90,6 @@ app.post('/delStock',[
   }
 ]);
 
-server.listen(port,function(){
+server.listen(port,server_ip_address,function(){
   console.log("server is now listen on port:"+port);
 })
