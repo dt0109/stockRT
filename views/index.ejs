@@ -1,0 +1,43 @@
+<form method="post" action="/">
+  <input name="number" placeholder="Enter a stock number here"></input>
+  <input type="submit"></input>
+</form>
+<form method="post" action="/delStock">
+  <input name="delStock" placeholder="Enter a stock number here to delete"></input>
+  <input type="submit"></input>
+</form>
+
+<hr>
+
+<table style="width:100%" id="stock_detail">
+  <thead>
+    <tr>
+      <th>name</th>
+      <th>current price</th> 
+      <th>changes</th>
+      <th>Volumn</th>
+    <tr>
+  </thead>
+</table>
+
+<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" ></script>
+<script>
+  var $stock_detail = $("#stock_detail");
+  var socket = io.connect("//localhost:3000");
+
+  socket.on('stock',function(stocks) {
+
+    var format = "<thead><tr><th>name</th><th>current price</th><th>changes</th><th>Volumn</th></tr></thead><tbody>";
+    stocks.forEach(function(stock){
+      if(stock.PosOrNeg==='pos'){
+        format+="<tr><td>"+stock.StockName+"</td><td style='color:green'>"+stock.CurrentPrice+"</td><td style='color:green'>"+stock.StockChange+"</td><td>"+stock.StockVolumn+"</td></tr>";
+      }else{
+        format+="<tr><td>"+stock.StockName+"</td><td style='color:red'>"+stock.CurrentPrice+"</td><td style='color:red'>"+stock.StockChange+"</td><td>"+stock.StockVolumn+"</td></tr>";
+      }
+    });
+    format+="</tbody>";
+    $stock_detail.html(format);
+  });
+
+</script>
