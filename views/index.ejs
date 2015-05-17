@@ -24,7 +24,7 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" ></script>
 <script>
   var $stock_detail = $("#stock_detail");
-  var socket = io.connect("//localhost:3000");
+  var socket = io.connect("http://stockrt-dt0109.rhcloud.com:8080");
 
   socket.on('stock',function(stocks) {
 
