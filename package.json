@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node $relative_path_from_repo_dir/server.js"
   },
   "author": "Dennis",
   "license": "ISC",
